@@ -48,6 +48,10 @@ def close_db(exception):
 ########################
 # API Calls
 ########################
+
+# /add
+# Takes in JSON with payer, points, and timestamp fields
+# and adds them to the database
 @app.route("/add", methods=['POST'])
 def add_point():
     request_json = request.get_json()
@@ -73,7 +77,10 @@ def add_point():
     except Error as e:
         return "Error adding points", 500
 
-
+# /spend
+# Takes in a JSON with a points field
+# and modifies the database to spend that many points.
+# Spends points based on earliest purchases
 @app.route("/spend", methods=['POST'])
 def spend_points():
     request_json = request.get_json()

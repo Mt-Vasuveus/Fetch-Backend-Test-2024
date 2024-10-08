@@ -1,0 +1,18 @@
+1. Why did you choose the tools, libraries, and language you used for the coding exercise?
+
+I chose to write this program in Python using a SQLite3 database to store the data.
+Python is good for this excersize because it is a language I am comfortable with and it has very conviennent libraries for working with databases and HTTP requests.
+I chose SQLite3 because it is a lightweight database that is easy to use and does not require a separate server to run.
+
+2. What are the advantages and disadvantages of your solution?
+
+Ome major advantage of my solution is that it can be extended to work with any other database backend. 
+Another advantage of my solution is that it that it uses SQLite3 to query the data, which allows for other programs to access the data for analysis.
+One major disadvantage of my solution is that over time, the database would fill up with entries of companies with 0 points, which would make the database less efficient.
+Another disadvantage of my solution is that allowing negative point values in the /add endpoint can lead to errors or negative point values for a payer.
+
+3. What has been a favorite school/personal project thus far? What about it that challenged you?
+My favorite school project was one where I had to find a novel dataset and run some kind of statistical analysis on it.
+For my project, I analyzed the relationship between student attendance for students who qualified for free or reduced lunch versus those who did not.
+My favorite part of the project was finding the data and cleaning it up to be used in my analysis.
+I also liked the process of working hands on with the various statistical tests we had learned in class and seeing them in action.
