@@ -71,7 +71,63 @@ def add_point():
 @app.route("/spend", methods=['POST'])
 def spend_points():
     print("spending points")
-    return "WIP"
+
+    request_json = request.get_json()
+
+    # Check that the json has the data we need
+    if ("points" not in request_json.keys()):
+        return "Invalid JSON", 400
+
+    points_to_spend = request_json["points"]
+    
+    # Check if there are enough points to spend
+    total_balance_query = "SELECT SUM(points) FROM points_db"
+    total_balance = query_db(total_balance_query)[0][0]
+
+    if (total_balance < points_to_spend):
+        return "Insufficient points", 400
+
+    # Keep track of the ones we spend
+    running_total = dict()
+
+    while points_to_spend > 0:
+        # Makes sure we get the oldest query that isn't 0
+        # Have to keep 0s to make sure we still display payers with 0 points in /balance
+        oldest_query = "SELECT * FROM points_db WHERE points != 0 ORDER BY timestamp ASC;"
+        oldest_points = query_db(oldest_query, one = True)
+
+        # Make sure we can keep track of who's points we spent
+        if (oldest_points[0] not in running_total.keys()):
+            running_total[oldest_points[0]] = 0
+
+        if (oldest_points[1] > points_to_spend):
+            # Not all points will be spent
+            update_query = "UPDATE points_db SET points = ? WHERE payer = ? AND points = ? AND timestamp = ?;"
+            query_db(update_query, [
+                oldest_points[1] - points_to_spend,
+                oldest_points[0],
+                oldest_points[1],
+                oldest_points[2]])
+
+            # Update how much we spent for a given buyer
+            running_total[oldest_points[0]] -= points_to_spend
+            # If we're not spending all of the points, we're done spending
+            return
+        else:
+            # Set entry in points_db to 0
+            update_query = "UPDATE points_db SET points = ? WHERE payer = ? AND points = ? AND timestamp = ?;"
+            query_db(update_query, [
+                0,
+                oldest_points[0],
+                oldest_points[1],
+                oldest_points[2]])
+
+            # Update how much we spent for a given buyer
+            running_total[oldest_points[0]] -= oldest_points[1]
+            # Update the ammount we still need to spend 
+            points_to_spend -= oldest_points[1]
+
+    return jsonify(running_total), 200
 
 @app.route("/balance", methods=['GET'])
 def get_balance():

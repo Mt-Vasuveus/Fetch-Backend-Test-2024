@@ -47,7 +47,7 @@ print(r)
 r = requests.post(spend_url, json={
 	"points": 5000 })
 print(r.status_code)
-print(r)
+print(r.json())
 
 r = requests.get(balance_url)
 print(r.status_code)
