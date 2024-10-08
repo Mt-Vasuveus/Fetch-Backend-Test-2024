@@ -75,12 +75,11 @@ def spend_points():
 
 @app.route("/balance", methods=['GET'])
 def get_balance():
-    balance_query = "SELECT payer, points FROM points_db;"
+    balance_query = "SELECT payer, SUM(points) FROM points_db GROUP BY payer;"
     balance = query_db(balance_query)
 
     print(balance)
-    print("getting points")
-    return "WIP"
+    return jsonify(balance), 200
 
 
 ########################

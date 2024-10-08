@@ -51,4 +51,4 @@ print(r)
 
 r = requests.get(balance_url)
 print(r.status_code)
-print(r)
+print(r.json())
